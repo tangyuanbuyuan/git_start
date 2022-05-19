@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xttc.dao.BookMapper">
+<select resultType="com.xttc.pojo.book" id="selectBookAll">
+    select* from book
+</select>
+    <insert id="insertBook" parameterType="com.xttc.pojo.book">
+        insert into book(bookname,ISBN,price,press,bcount,author)
+        values(#{bookname},#{ISBN},#{price},#{press},#{bcount},#{author})
+    </insert>
+    <select id="findBookandSubByISBN" resultMap="bookWithsubscribe">
+        select book.*,subscribe.*
+        from book,subscribe
+        where book.ISBN=subscribe.book_ISBN and book.ISBN = #{ISBN}
+    </select>
+    <resultMap id="bookWithsubscribe" type="com.xttc.pojo.book">
+        <id property="id" column="id"/>
+        <result property="bookname" column="bookname"/>
+        <result property="ISBN" column="ISBN"/>
+        <result property="price" column="price"/>
+        <result property="press" column="press"/>
+        <result property="bcount" column="bcount"/>
+        <result property="author" column="author"/>
+        <collection property="subscribeList" ofType="com.xttc.pojo.subscribe">
+            <id property="id" column="id"/>
+            <result property="usersid" column="user_sid"/>
+            <result property="bookISBN" column="book_ISBN"/>
+            <result property="countnum" column="countnum"/>
+            <result property="sumprice" column="sumprice"/>
+        </collection>
+    </resultMap>
+    <select id="findBookByISBN" parameterType="String" resultType="com.xttc.pojo.book">
+        select *
+        from book
+        where ISBN = #{ISBN}
+    </select>
+    <delete id="deleteBook" parameterType="String">
+        delete from book where ISBN=#{ISBN}
+    </delete>
+    <update id="updateBook" parameterType="com.xttc.pojo.book">
+        update book set bookname=#{bookname},press=#{press},author=#{author},ISBN=#{ISBN},price=#{price},bcount=#{bcount} where id=#{id}
+    </update>
+    <select id="selectBook" parameterType="String" resultType="com.xttc.pojo.book">
+        select * from book where ISBN like concat('%',#{str},'%') or bookname like concat('%',#{str},'%')
+    </select>
+</mapper>

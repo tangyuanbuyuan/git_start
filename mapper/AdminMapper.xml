@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xttc.dao.AdminMapper">
+
+<select id="findAdminById" parameterType="String"
+        resultType="com.xttc.pojo.person">
+    select password from admin where pname = #{pname}
+</select>
+    <select id="findAdminByEmail" parameterType="String"
+            resultType="com.xttc.pojo.person">
+    select * from admin where email= #{email}
+</select>
+<insert id="insertAdmin" parameterType="com.xttc.pojo.person">
+    insert into admin(pname,password,email) values(#{pname},#{password},#{email})
+</insert>
+
+</mapper>

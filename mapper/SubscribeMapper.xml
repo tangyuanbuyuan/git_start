@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xttc.dao.SubscribeMapper">
+    <select id="selectSubscribe" parameterType="string" resultType="com.xttc.pojo.subscribe">
+        select id,user_sid as usersid,book_ISBN as bookISBN,countnum,sumprice,dateTime from subscribe where user_sid = #{sid}
+    </select>
+    <insert id="insertSubscribe" parameterType="com.xttc.pojo.subscribe">
+        insert into subscribe(id,user_sid,book_ISBN,countnum,sumprice,dateTime)
+         value(#{id},#{usersid},#{bookISBN},#{countnum},#{sumprice},#{dateTime})
+    </insert>
+    <insert id="insertSubscribe1" parameterType="com.xttc.pojo.unsubscribe">
+        insert into subscribe(id,user_sid,book_ISBN,countnum,sumprice,dateTime)
+         value(#{id},#{usersid},#{bookISBN},#{countnum},#{sumprice},#{dateTime})
+    </insert>
+    <update id="updateSubscribeBySidAndISBN" parameterType="com.xttc.pojo.subscribe">
+    </update>
+    <select id="selectSubscribeAll" resultType="com.xttc.pojo.subscribe">
+    select * from subscribe
+</select>
+    <select id="findSubscribeById" parameterType="Integer" resultType="com.xttc.pojo.subscribe">
+        select * from subscribe where id = #{id}
+    </select>
+    <delete id="deleteSubscribe" parameterType="Integer">
+        delete from subscribe where id=#{id}
+    </delete>
+</mapper>
