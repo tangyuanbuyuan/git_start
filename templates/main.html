@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/favicon.ico">
+    <link rel="canonical" href="https://getbootstrap.com/docs/3.4/examples/dashboard/">
+    <link rel="stylesheet" href="node_modules\layui\dist\css\layui.css">
+    <title>教材订阅控制台</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/assets/css/ie10-viewport-bug-workaround.css"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/examples/dashboard/dashboard.css"
+          rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]>
+    <script src="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/assets/js/ie8-responsive-file-warning.js"></script>
+    <![endif]-->
+    <script src="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <STYLE type=text/css>
+        #fm {
+            line-height: 24px; list-style-type: none; background:#000000; font-family:fantasy;
+        }/*设置盒子的行高，去掉标记，设置背景颜色*/
+        #fm a {
+            display: block; width: 120px;height:50px; text-align:center;
+        }/*设置A标签为块元素不显示，宽度，居中*/
+        #fm a:link {
+            color:#666; text-decoration:none;
+        } /* 设置未访问的链接样式*/
+        #fm a:visited {
+            color:#666;text-decoration:none;
+        } /* 设置已访问的链接样式 */
+        #fm a:hover {
+            color:#FFF;text-decoration:none;font-weight:bold;
+        }  /* 当有鼠标悬停在链接上的颜色 */
+        #fm li {
+            float: left; width: 150px; background:#FFF;
+        }
+        #fm li a:hover{
+            background:#999;
+        }
+        #fm li ul {
+            line-height: 30px; list-style-type: none;text-align:left; left: -999em; width: 120px; position: absolute;
+        }
+        #fm li ul li{
+            float: right; width: 120px; background: #FFF;
+        }
+        #fm li ul a{
+            display: block; width: 120px;width: 120px;text-align:left;padding-left:5px;
+        }
+        #fm li ul a:link {
+            color:#666; text-decoration:none;
+        }
+        #fm li ul a:visited {
+            color:#666;text-decoration:none;
+        }
+        #fm li ul a:hover {
+            color:#000;text-decoration:none;font-weight:normal; background:rgb(252, 228, 228);
+        }
+        #fm li:hover ul {
+            left: auto;
+        }
+        #fm li.sfhover ul {
+            left: auto;
+        }
+        #content {
+            clear: left;
+        }
+    </STYLE>
+
+
+</head>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="bg-primary">
+        <div class="navbar-header ">
+            <a class="navbar-brand" href="#">管理员界面:教材管理</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="http://xttc.edu.cn/" class="glyphicon glyphicon-home">首页</a></li>
+                <ul class="nav navbar-nav navbar-right" id=fm>
+                    <li>
+                        <a href="#" class="glyphicon glyphicon-user " th:text="${session.loginAdmin.pname}"></a>
+                        <ul>
+                            <li><a href="/logout" class="glyphicon glyphicon-log-out ">&nbsp退出登录</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <li><a href="/help" class="glyphicon glyphicon-search">帮助</a></li>
+            </ul>
+            <form action="/selectbook" method="post"  class="navbar-form navbar-right">
+                <input type="text" class="form-control" name="str" placeholder="搜索...">
+                <input type="submit" class="form-control"  value="搜索">
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+            <li><a href="/main">书库 <span class="sr-only">(current)</span></a></li>
+            <li><a href="/user">用户</a></li>
+            <li><a href="/mngSub">订单</a></li>
+            <li><a href="/mngUnSub">待处理订单<button th:text="${num}" style="border-radius:50%;width: 20px;height:20px;background-color: red"></button></a></li>
+        </ul>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="row">
+            <div class="col-md-10"><h2 class="sub-header">教材列表</h2></div>
+            <div class="col-md-1">
+                <button test-active="test-form" onmouseover="temshowTag=true" onmouseout="temshowTag=true" class="btn btn-success">添加教材</button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped" id="table_page" >
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>Id</th>
+                    <th>书名</th>
+                    <th>出版社</th>
+                    <th>作者</th>
+                    <th>ISBN码</th>
+                    <th>价格</th>
+                    <th>数量</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="book,bookStat:${books}">
+                    <td th:text="${bookStat.index}"></td>
+                    <td th:text="${book.id}"></td>
+                    <form action="/update" method="post" class="layui-form layui-form-pane">
+                        <input style="display: none" name="id" th:value="${book.id}">
+                    <td>
+                        <input type="text" name="bookname" class="form-control" style="border: 0;width: 200px" onmouseover="temshowTag=true" onmouseout="temshowTag=false"  th:value="${book.bookname}" required>
+                    </td>
+                    <td>
+                        <input type="text" name="press" class="form-control" style="border: 0;width: 150px" onmouseover="temshowTag=true" onmouseout="temshowTag=false"  th:value="${book.press}" required>
+                    </td>
+                    <td>
+                        <input type="text" name="author" class="form-control" style="border: 0;width: 100px" onmouseover="temshowTag=true" onmouseout="temshowTag=false"  th:value="${book.author}" required>
+                    </td>
+                    <td>
+                        <input type="text" name="ISBN" class="form-control" style="border: 0;width: 150px" onmouseover="temshowTag=true" onmouseout="temshowTag=false"  th:value="${book.ISBN}" required>
+                    </td>
+                    <td>
+                        <input type="number" name="price" class="form-control" style="border: 0;width: 80px" onmouseover="temshowTag=true" onmouseout="temshowTag=false" th:value="${book.price}" required>
+                    </td>
+                    <td>
+                        <input type="number" name="bcount" class="form-control" style="border: 0;width: 80px" onmouseover="temshowTag=true" onmouseout="temshowTag=false"  th:value="${book.bcount}" required>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" lay-submit lay-filter="*" onmouseover="temshowTag=true" onmouseout="temshowTag=true">修改</button>
+                        <button type="button" class="btn btn-danger" th:onclick="queding([[${book.ISBN}]])" onmouseover="temshowTag=true" onmouseout="temshowTag=true">删除</button>
+                    </td>
+                    </form>
+                </tr>
+        </tbody>
+        </table>
+            <div style="align-items: center;justify-content: center;display: flex;"><div th:text="${msg1}"></div></div>
+        </div>
+        <div style="align-items: center;justify-content: center;display: flex;">
+            <div style="position: absolute;top:630px;">
+                <a href="#" class="btn btn-default" id="btn1" onmouseover="temshowTag=true" onmouseout="temshowTag=true">首页</a>
+                <a href="#" class="btn btn-default " id="btn2" onmouseover="temshowTag=true" onmouseout="temshowTag=true"><div class="glyphicon glyphicon-chevron-left"></div>上一页</a>
+                <a href="#" class="btn btn-default " id="btn3" onmouseover="temshowTag=true" onmouseout="temshowTag=true">下一页<div class="glyphicon glyphicon-chevron-right"></div></a>
+                <a href="#" class="btn btn-default" id="btn4" onmouseover="temshowTag=true" onmouseout="temshowTag=true">尾页</a>
+            </div>
+        </div>
+    </div>
+ </div>
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://fastly.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"
+        integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ"
+        crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/dist/js/bootstrap.min.js"></script>
+<!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+<script src="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/assets/js/vendor/holder.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="node_modules/layui/dist/layui.js"></script>
+
+<!--表格-->
+<script type="text/javascript">
+    var pageSize =9; //每页显示的记录条数
+
+    var curPage=0; //当前页
+
+    var lastPage; //最后页
+
+    var direct=0; //方向
+
+    var len; //总行数
+
+    var page; //总页数
+
+    var begin;
+
+    var end;
+
+    $(document).ready(function display(){
+
+        len =$("#table_page tr").length-1; // 求这个表的总行数，剔除第一行介绍
+
+        page=len % pageSize==0 ? len/pageSize : Math.floor(len/pageSize)+1;//根据记录条数，计算页数
+
+ //alert("page==="+page);
+
+        curPage=1; // 设置当前为第一页
+
+        displayPage(1);//显示第一页
+
+
+        $("#btn1").click(function firstPage(){ // 首页
+
+            curPage=1;
+
+            direct = 0;
+
+            displayPage();
+
+        });
+
+        $("#btn2").click(function frontPage(){ // 上一页
+
+            direct=-1;
+
+            displayPage();
+
+        });
+
+        $("#btn3").click(function nextPage(){ // 下一页
+
+            direct=1;
+
+            displayPage();
+
+        });
+
+        $("#btn4").click(function lastPage(){ // 尾页
+
+            curPage=page;
+
+            direct = 0;
+
+            displayPage();
+
+        });
+    });
+
+    function displayPage(){
+
+        if(curPage <=1 && direct==-1){
+
+            direct=0;
+
+            alert("已经是第一页了");
+
+            return;
+
+        } else if (curPage >= page && direct==1) {
+
+            direct=0;
+
+            alert("已经是最后一页了");
+
+            return ;
+
+        }
+
+        lastPage = curPage;
+
+// 修复当len=1时，curPage计算得0的bug
+
+        if (len > pageSize) {
+
+            curPage = ((curPage + direct + len) % len);
+
+        } else {
+
+            curPage = 1;
+
+        }
+
+        begin=(curPage-1)*pageSize + 1;// 起始记录号
+
+        end = begin + 1*pageSize - 1; // 末尾记录号
+
+        if(end > len ) end=len;
+
+        $("#table_page tr").hide(); // 首先，设置这行为隐藏
+
+        $("#table_page tr").each(function(i){ // 然后，通过条件判断决定本行是否恢复显示
+
+            if((i>=begin && i<=end) || i==0 )//显示begin<=x<=end的记录
+
+                $(this).show();
+
+        });
+
+    }
+
+</script>
+<!--点击空白处刷新-->
+<script>
+    document.onclick=function()
+    {
+        if(temshowTag==false)
+        {
+            window.location.replace("/main")
+        }
+    }
+</script>
+<!--删除确认-->
+<script th:inline="javascript">
+    function queding(ISBN) {
+        alert(ISBN);
+        if (confirm("您确定删除吗？")){
+            window.location.href='/delete?ISBN='+ISBN
+        }
+        else{
+            window.location.href='/main'
+        }
+    }
+</script>
+<!--添加教材的反馈-->
+<script th:inline="javascript">
+    var flog1=[[${biaozhi}]]
+        //function addbook(flog1){
+            if (flog1!=null){
+                //alert(flog1);
+                if ((flog1=="1")){
+                }
+                else if(flog1=="0"){
+                    alert("书库里已经添加了，不能重复添加")
+                }
+           // }
+        }
+</script>
+<!--layui写的弹出框-->
+<script>
+    layui.use(function(){
+        var layer = layui.layer
+            ,form = layui.form
+            ,laypage = layui.laypage
+            ,element = layui.element
+            ,laydate = layui.laydate
+            ,util = layui.util;
+
+        //欢迎信息
+        // layer.msg("欢迎登陆本系统");
+        //日期
+        laydate.render({
+            elem: '#test2'
+            ,value: new Date()
+            ,isInitValue: true
+        });
+
+//自定义验证规则
+        form.verify({
+            int: function(value){
+                if(/^\d+$/.test(value)==false)
+                {
+                    return '请输入整数';
+                }
+            }
+        });
+        form.verify({
+            ISBN:function(value){
+                if(/^(?:ISBN(?:-13)?:? )?(?=[0-9]{13}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)97[89][- ]?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9]$/.test(value)==false){
+                    return "ISBN不符合规格";
+                }
+            }
+        });
+        //触发事件
+        util.event('test-active', {
+            'test-form': function(){
+                layer.open({
+                    type: 1
+                    ,resize: false
+                    ,shadeClose: true
+                    ,area: '350px'
+                    ,title: "添加教材"
+                    ,content:['<form action="/main" method="post">'
+                        ,'<ul class="layui-form layui-form-pane" style="margin: 15px;">'
+                        ,'<li class="layui-form-item">'
+                        ,'<label class="layui-form-label">书名</label>'
+                        ,'<div class="layui-input-block">'
+                        ,'<input class="layui-input" lay-verify="required" name="bookname" >'
+                        ,'</div>'
+                        ,'</li>'
+                        ,'<li class="layui-form-item">'
+                        ,'<label class="layui-form-label">出版社</label>'
+                        ,'<div class="layui-input-block">'
+                        ,'<input class="layui-input" lay-verify="required" name="press">'
+                        ,'</div>'
+                        ,'</li>'
+                        ,'<li class="layui-form-item">'
+                        ,'<label class="layui-form-label">作者</label>'
+                        ,'<div class="layui-input-block">'
+                        ,'<input class="layui-input" lay-verify="required" name="author">'
+                        ,'</div>'
+                        ,'</li>'
+                        ,'<li class="layui-form-item">'
+                        ,'<label class="layui-form-label">ISBN码</label>'
+                        ,'<div class="layui-input-block">'
+                        ,'<input class="layui-input" lay-verify="required|ISBN" name="ISBN">'
+                        ,'</div>'
+                        ,'</li>'
+                        ,'<li class="layui-form-item">'
+                        ,'<label class="layui-form-label">价格</label>'
+                        ,'<div class="layui-input-block">'
+                        ,'<input class="layui-input" lay-verify="required|number|int" name="price">'
+                        ,'</div>'
+                        ,'</li>'
+                        ,'<li class="layui-form-item">'
+                        ,'<label class="layui-form-label">数量</label>'
+                        ,'<div class="layui-input-block">'
+                        ,'<input class="layui-input" lay-verify="required|number|int" name="bcount">'
+                        ,'</div>'
+                        ,'</li>'
+                        ,'<li class="layui-form-item" style="text-align:center;">'
+                        ,'<button type="submit"  lay-submit lay-filter="*" class="layui-btn">提交</button>'
+                        ,'</li>'
+                        ,'</ul>'
+                        ,'</form>'].join('')
+                    ,success: function(layero, index){
+                        layero.find('.layui-layer-content').css('overflow', 'visible');
+                        form.render().on('submit(*)', function(data){
+                            layer.msg(JSON.stringify(data.field), {icon: 1});
+                            //layer.close(index); //关闭层
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

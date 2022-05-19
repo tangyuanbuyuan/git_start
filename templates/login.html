@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统登陆界面</title>
+    <link rel="stylesheet" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
+    <style>
+        #biaoti{
+            color: saddlebrown;
+        }
+        /* *{
+            border: 1px red solid;
+        } */
+        .xiaoxi{
+            font-family:serif;
+            color: snow;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row" >
+        <div class="col-md-2"></div>
+        <div class="col-md-2"><img src="./img/1.png" style="width: 245px;"></div>
+        <div class="col-md-3"><h1 id="biaoti">&nbsp教材管理</h1></div>
+        <div class="col-md-3" style="position: relative;"><a class="btn btn-info" href="http://xttc.edu.cn/" role="button" style="position: absolute;top: 40px;left: 400px;">首页</a></div>
+    </div>
+    <div class="row">
+        <div class="col-md-7"><img src="./img/login.png" style="height: 550px;width: 875px;"></div>
+        <div class="col-md-5" style="height: 550px;background-color:lightcyan;text-align: center;"><img src="./img/loginkuang.png" class="img-rounded" style="width: 370px;height: 400px;margin: 70px;position: relative;">
+            <form class="form-horizontal" action="/toLoginpage" method="post" style="position: absolute;top: 110px;left: 170px;">
+                <div>
+                    <p style="font-size: 30px;color: cornflowerblue;">登&nbsp录&nbsp窗</p>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="col-sm-2 control-label">
+                        <span class="glyphicon glyphicon-user"></span>邮&nbsp箱</label>
+                    <div class="col-sm-10">
+                        <div th:text="${msg1}"></div>
+                        <input type="text" class="form-control" name="email" id="email" placeholder="邮箱">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label"><span class="glyphicon glyphicon-lock"></span>密&nbsp码</label>
+                    <div class="col-sm-10">
+                        <div th:text="${msg2}"></div>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="密码">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> 记住我
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-offset-2 col-sm-10">
+                    <a class="btn btn-default" href="/register" role="button" >注册</a>
+                    <button type="submit" class="btn btn-default">登录</button>
+                    <button type="submit" class="btn btn-default">忘记密码</button>
+                </div>
+        </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12" style="height: 20px;background-color:#03a89e"></div>
+</div>
+<div class="row" style="background-color: skyblue ;height: 80px;">
+    <div class="col-md-2"></div>
+    <div class="col-md-1"><img src="./img/school.png" style="height: 70px;"></div>
+    <div class="col-md-7">
+        <div class="xiaoxi">地址：河北省邢台市桥东区泉北东大街88号   邮编：054001 </div>
+        <div class="xiaoxi">电话：教务学籍科0319-3650588/3650637 设备教材科0319-3650639
+            教学质量科0319-3650538 实践教学科0319-3650819</div>
+        <div class="xiaoxi">冀公网安备 13050002000227号冀ICP备2021011467号-1</div>
+    </div>
+</div>
+</div>
+<form>
+</form>
+</body>
+</html>

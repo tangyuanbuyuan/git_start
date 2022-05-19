@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/favicon.ico">
+    <link rel="canonical" href="https://getbootstrap.com/docs/3.4/examples/dashboard/">
+    <link rel="stylesheet" href="node_modules\layui\dist\css\layui.css">
+    <title>教材订阅控制台</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/assets/css/ie10-viewport-bug-workaround.css"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/examples/dashboard/dashboard.css"
+          rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]>
+    <script src="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/assets/js/ie8-responsive-file-warning.js"></script>
+    <![endif]-->
+    <script src="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <STYLE type=text/css>
+        #fm {
+            line-height: 24px; list-style-type: none; background:#000000; font-family:fantasy;
+        }/*设置盒子的行高，去掉标记，设置背景颜色*/
+        #fm a {
+            display: block; width: 120px;height:50px; text-align:center;
+        }/*设置A标签为块元素不显示，宽度，居中*/
+        #fm a:link {
+            color:#666; text-decoration:none;
+        } /* 设置未访问的链接样式*/
+        #fm a:visited {
+            color:#666;text-decoration:none;
+        } /* 设置已访问的链接样式 */
+        #fm a:hover {
+            color:#FFF;text-decoration:none;font-weight:bold;
+        }  /* 当有鼠标悬停在链接上的颜色 */
+        #fm li {
+            float: left; width: 150px; background:#FFF;
+        }
+        #fm li a:hover{
+            background:#999;
+        }
+        #fm li ul {
+            line-height: 30px; list-style-type: none;text-align:left; left: -999em; width: 120px; position: absolute;
+        }
+        #fm li ul li{
+            float: right; width: 120px; background: #FFF;
+        }
+        #fm li ul a{
+            display: block; width: 120px;width: 120px;text-align:left;padding-left:5px;
+        }
+        #fm li ul a:link {
+            color:#666; text-decoration:none;
+        }
+        #fm li ul a:visited {
+            color:#666;text-decoration:none;
+        }
+        #fm li ul a:hover {
+            color:#000;text-decoration:none;font-weight:normal; background:rgb(252, 228, 228);
+        }
+        #fm li:hover ul {
+            left: auto;
+        }
+        #fm li.sfhover ul {
+            left: auto;
+        }
+        #content {
+            clear: left;
+        }
+        /*弹出层css*/
+        .hide{
+            display: none;
+        }
+        .c1{
+            position: fixed;
+            top:0;
+            bottom: 0;
+            left:0;
+            right: 0;
+            background: rgba(0,0,0,.5);
+            z-index: 2;
+        }
+        .c2{
+            background-color: white;
+            position: fixed;
+            width: 400px;
+            height: 200px;
+            top:50%;
+            left: 50%;
+            z-index: 3;
+            margin-top: -150px;
+            margin-left: -200px;
+        }
+        #modal p {
+            margin-left: 80px;
+        }
+    </STYLE>
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="bg-primary">
+        <div class="navbar-header ">
+            <a class="navbar-brand" href="#">管理员界面:教材管理</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="http://xttc.edu.cn/" class="glyphicon glyphicon-home">首页</a></li>
+                <ul class="nav navbar-nav navbar-right" id=fm>
+                    <li>
+                        <a href="#" class="glyphicon glyphicon-user " th:text="${session.loginAdmin.pname}"></a>
+                        <ul>
+                            <li><a href="/logout" class="glyphicon glyphicon-log-out ">&nbsp退出登录</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <li><a href="/help" class="glyphicon glyphicon-search">帮助</a></li>
+            </ul>
+            <form action="/selectuser" method="post" class="navbar-form navbar-right">
+                <input type="text" class="form-control" name="str" placeholder="搜索...">
+                <input type="submit" class="form-control"  value="搜索">
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+            <li><a href="/main">书库 <span class="sr-only">(current)</span></a></li>
+            <li><a href="/user">用户</a></li>
+            <li><a href="/mngSub">订单</a></li>
+            <li><a href="/mngUnSub">待处理订单<button th:text="${num}" style="border-radius:50%;width: 20px;height:20px;background-color: red"></button></a></li>
+        </ul>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+        <div class="row">
+            <div class="col-md-10"><h2 class="sub-header">用户列表</h2></div>
+        </div>
+        <div class="table-responsive" style="height:610px;">
+            <table class="table table-striped" id="table_page">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>订单Id</th>
+                    <th>单主学号</th>
+                    <th>教材ISBN码</th>
+                    <th>数量</th>
+                    <th>价格</th>
+                    <th>下单时间</th>
+                    <th>管理</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="subscribe,subStat:${subscribes}">
+                    <td th:text="${subStat.index}"></td>
+                    <td th:text="${subscribe.id}">订单Id</td>
+                    <td>
+                        <ul class="layui-nav layui-bg-cyan layui-inline" lay-filter="demo" style="height: 45px;">
+                            <li class="layui-nav-item">
+                                <a href="javascript:;" th:text="${subscribe.usersid}">教材ISBN码</a>
+                                <dl class="layui-nav-child">
+                                    <dd><a href="" th:text="${user.pname}">菜单1</a></dd>
+                                    <dd><a href="" th:text="${user.sclass}">菜单2</a></dd>
+                                    <dd><a href="" th:text="${user.email}">菜单3</a></dd>
+                                </dl>
+                            </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="layui-nav layui-bg-cyan layui-inline" lay-filter="demo" style="height: 45px;text-align: center">
+                            <li class="layui-nav-item">
+                                <a href="javascript:;" th:text="${subscribe.bookISBN}">教材ISBN码</a>
+                                <dl class="layui-nav-child">
+                                    <dd><a href="" th:text="${book.bookname}">菜单1</a></dd>
+                                    <dd><a href="" th:text="${book.author}">菜单2</a></dd>
+                                    <dd><a href="" th:text="${book.press}">菜单3</a></dd>
+                                    <dd><a href="" th:text="${book.price}">菜单3</a></dd>
+                                    <dd><a href="" th:text="${book.bcount}">菜单3</a></dd>
+                                </dl>
+                            </li>
+                        </ul>
+                    </td>
+                    <td th:text="${subscribe.countnum}">数量</td>
+                    <td th:text="${subscribe.sumprice}">价格</td>
+                    <td th:text="${subscribe.dateTime}">下单时间</td>
+                    <td>
+                        <button class="btn btn-danger" th:onclick="Show([[${subscribe.id}]],[[${user.pname}]],[[${user.email}]])" id="shanchu">删除</button>
+                        <div id="shade" class="c1 hide"></div>
+                        <div id="modal" class="c2 hide" >
+                            <form action="/deleteSub" method="post" onsubmit="return queding1()">
+                                <ul class="layui-form layui-form-pane" style="margin: 15px;">
+                                    <li class="layui-form-item">
+                                        <div style="position: relative;width:380px">
+                                            <div>请填写订阅数量</div>
+                                            <button type="button" style="position: absolute;left: 350px;" class="glyphicon glyphicon-remove" onclick="Hide()"></button>
+                                        </div>
+                                    </li>
+                                    <li><HR style="opacity: 0.8"></li>
+                                    <li class="layui-form-item">
+                                        <label class="layui-form-label">理由</label>
+                                        <div class="layui-input-block">
+                                            <textarea class="layui-input" lay-verify="required"  name="reason" cols="40"></textarea>
+                                            <input class="layui-input"  id="input1" style="display: none" name="SubID">
+                                            <input class="layui-input"  id="input2" style="display: none" name="username">
+                                            <input class="layui-input"  id="input3" style="display: none" name="useremail">
+                                        </div>
+                                    </li>
+                                    <li class="layui-form-item" style="text-align:center;">
+                                        <button type="submit" lay-submit lay-filter="*" class="layui-btn">删除</button>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div style="align-items: center;justify-content: center;display: flex;"><div th:text="${msg}"></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://fastly.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"
+        integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ"
+        crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/dist/js/bootstrap.min.js"></script>
+<!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+<script src="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/assets/js/vendor/holder.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="https://fastly.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.35/assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="node_modules/layui/dist/layui.js"></script>
+<script>
+    function queding1() {
+        if(confirm("您确定要取消此订单吗？")){
+            return true;
+        }else {
+            return false;
+        }
+    }
+</script>
+<!--订阅弹出层表单-->
+<script th:inline="javascript">
+    function Show(ISBN,username,useremail){
+        document.getElementById('shade').classList.remove('hide');
+        document.getElementById('modal').classList.remove('hide');
+        $("#input1").val(ISBN);
+        $("#input2").val(username);
+        $("#input3").val(useremail);
+
+    }
+    function Hide(){
+        document.getElementById('shade').classList.add('hide');
+        document.getElementById('modal').classList.add('hide');
+    }
+</script>
+<script th:inline="javascript">
+    function queding(ISBN) {
+        alert(ISBN);
+        if (confirm("您确定删除吗？")){
+            window.location.href='/delete?ISBN='+ISBN
+            //alert(flog)
+            /* if(flog!=null){
+                 if (flog==true){
+                     alert("删除成功");
+                 }else{
+                     alert("已经被订阅，不能删除");
+                 }
+             }*/
+        }
+        else{
+            window.location.href='/main'
+        }
+    }
+</script>
+<script th:inline="javascript">
+    var flog1=[[${biaozhi}]]
+    //function addbook(flog1){
+    if (flog1!=null){
+        //alert(flog1);
+        if ((flog1=="1")){
+            alert("添加成功")
+        }
+        else if(flog1=="0"){
+            alert("书库里已经添加了，不能重复添加")
+        }
+        // }
+    }
+</script>
+<script th:inline="javascript">
+    layui.use(function(){
+        var layer = layui.layer
+            ,form = layui.form
+            ,laypage = layui.laypage
+            ,element = layui.element
+            ,laydate = layui.laydate
+            ,util = layui.util;
+
+        //欢迎信息
+        //layer.msg("欢迎登陆本系统");
+        //日期
+        laydate.render({
+            elem: '#test2'
+            ,value: new Date()
+            ,isInitValue: true
+        });
+
+//自定义验证规则
+        form.verify({
+            int: function(value){
+                if(/^\d+$/.test(value)==false)
+                {
+                    return '请输入整数';
+                }
+            }
+        });
+        form.verify({
+            ISBN:function(value){
+                if(/^(?:ISBN(?:-13)?:? )?(?=[0-9]{13}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)97[89][- ]?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9]$/.test(value)==false){
+                    return "ISBN不符合规格";
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

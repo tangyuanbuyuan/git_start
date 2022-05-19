@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
+    <title>修改个人信息</title>
+    <STYLE type=text/css>
+        #fm {
+            line-height: 24px; list-style-type: none; background:#000000; font-family:fantasy;
+        }/*设置盒子的行高，去掉标记，设置背景颜色*/
+        #fm a {
+            display: block; width: 120px;height:50px; text-align:center;
+        }/*设置A标签为块元素不显示，宽度，居中*/
+        #fm a:link {
+            color:#666; text-decoration:none;
+        } /* 设置未访问的链接样式*/
+        #fm a:visited {
+            color:#666;text-decoration:none;
+        } /* 设置已访问的链接样式 */
+        #fm a:hover {
+            color:#FFF;text-decoration:none;font-weight:bold;
+        }  /* 当有鼠标悬停在链接上的颜色 */
+        #fm li {
+            float: left; width: 150px; background:#FFF;
+        }
+        #fm li a:hover{
+            background:#999;
+        }
+        #fm li ul {
+            line-height: 30px; list-style-type: none;text-align:left; left: -999em; width: 120px; position: absolute;
+        }
+        #fm li ul li{
+            float: right; width: 120px; background: #FFF;
+        }
+        #fm li ul a{
+            display: block; width: 120px;width: 120px;text-align:left;padding-left:5px;
+        }
+        #fm li ul a:link {
+            color:#666; text-decoration:none;
+        }
+        #fm li ul a:visited {
+            color:#666;text-decoration:none;
+        }
+        #fm li ul a:hover {
+            color:#000;text-decoration:none;font-weight:normal; background:rgb(252, 228, 228);
+        }
+        #fm li:hover ul {
+            left: auto;
+        }
+        #fm li.sfhover ul {
+            left: auto;
+        }
+        #content {
+            clear: left;
+        }
+        /* *{
+             border: 1px solid red;
+        }*/
+    </STYLE>
+</head>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div style="background-color: #FFF;">
+        <div class="navbar-header" >
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2" style="align-items: center;justify-content: center;display: flex;height:80px"><a class="glyphicon glyphicon-arrow-left" href="/main1">返回</a></div>
+                    <div class="col-md-1"><img  src="img/shou.png" style="width: 130px;height: 80px;left: 0px;"></div>
+                    <div class="col-md-2" style="left: 20px;top: 35px;font-size: 20px;">|&nbsp账号设置</div>
+                </div>
+            </div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right" id=fm>
+                    <li>
+                        <a href="#" class="glyphicon glyphicon-user" th:text="${session.loginUser.pname}"></a>
+                        <ul>
+                            <li><a href="/main1" class="glyphicon glyphicon-home ">&nbsp首页</a></li>
+                            <li><a href="/information" class="glyphicon glyphicon-pencil ">&nbsp修改信息</a></li>
+                            <li><a href="/logout1" class="glyphicon glyphicon-log-out ">&nbsp退出登录</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="row"><div class="col-md-12" style="height: 120px;background-color: #ddd;"></div></div>
+<div class="row">
+    <div class="col-md-2" style="background-color:#ddd;height: 500px;"></div>
+    <div class="col-sm-3 col-md-2 sidebar" style="height: 500px;border: 1px solid #333;">
+        <ul class="nav nav-sidebar">
+            <li ><a class="glyphicon glyphicon-user" href="/information">&nbsp个人信息<span class="sr-only">(current)</span></a></li>
+            <li><a class="glyphicon glyphicon-lock" href="/safe">&nbsp账号安全</a></li>
+        </ul>
+    </div>
+    <div class="col-md-6" style="height: 500px;border: 1px solid #333;align-items: center;justify-content: center;display: flex;">
+        <div >
+            <form action="/complete" method="post">
+                <div class="form-group" style="width: 400px;height: 50px;">
+                    <label for="username" class="col-md-3 control-label"><span>用户名</span></label>
+                    <div class="col-md-9">
+                        <input type="text" id="username" name="pname" th:value="${user.pname}" class=" form-control" placeholder="用户名" required autofocus>
+                    </div>
+                </div>
+                <div class="form-group" style="width: 400px;height: 50px;">
+                    <label for="sid" class="col-md-3 control-label"><span>学号</span></label>
+                    <div class="col-md-9">
+                        <div th:text="${msg}"></div>
+                        <input type="text" id="sid" name="sid" th:value="${user.sid}" class=" form-control" placeholder="学号" required autofocus>
+                    </div>
+                </div>
+                <div class="form-group" style="width: 400px;height: 50px;">
+                    <label for="sclass" class="col-md-3 control-label"><span>班级</span></label>
+                    <div class="col-md-9">
+                        <input type="text" id="sclass" name="sclass" th:value="${user.sclass}" class=" form-control" placeholder="班级" required autofocus>
+                    </div>
+                </div>
+                <div th:text="${msg1}"></div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">保存</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-2" style="background-color:#ddd;height: 500px;"></div>
+</div>
+<div class="row"><div class="col-md-12" style="height: 40px;background-color: #ddd;"></div></div>
+<div class="row"><div class="col-md-12" style="background-color: #234;align-items: center;justify-content: center;display: flex;height: 80px;"><div style="text-align: center;color: #999;">©邢院 技术支持：邢台学院教材管理部门    冀ICP备115511552号-3    增值电信业务经营许可证：无</div></div></div>
+</body>
+</html>
